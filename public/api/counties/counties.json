@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Los Angeles County",
+    "state": "California",
+    "stateAbbreviation": "CA",
+    "seat": "Los Angeles"
+  },
+  {
+    "name": "Cook County",
+    "state": "Illinois",
+    "stateAbbreviation": "IL",
+    "seat": "Chicago"
+  },
+  {
+    "name": "Harris County",
+    "state": "Texas",
+    "stateAbbreviation": "TX",
+    "seat": "Houston"
+  },
+  {
+    "name": "Maricopa County",
+    "state": "Arizona",
+    "stateAbbreviation": "AZ",
+    "seat": "Phoenix"
+  },
+  {
+    "name": "San Diego County",
+    "state": "California",
+    "stateAbbreviation": "CA",
+    "seat": "San Diego"
+  },
+  {
+    "name": "Orange County",
+    "state": "California",
+    "stateAbbreviation": "CA",
+    "seat": "Santa Ana"
+  },
+  {
+    "name": "Miami-Dade County",
+    "state": "Florida",
+    "stateAbbreviation": "FL",
+    "seat": "Miami"
+  },
+  {
+    "name": "Dallas County",
+    "state": "Texas",
+    "stateAbbreviation": "TX",
+    "seat": "Dallas"
+  },
+  {
+    "name": "Kings County",
+    "state": "New York",
+    "stateAbbreviation": "NY",
+    "seat": "Brooklyn"
+  },
+  {
+    "name": "Riverside County",
+    "state": "California",
+    "stateAbbreviation": "CA",
+    "seat": "Riverside"
+  }
+]
