@@ -1,0 +1,39 @@
+[
+  {
+    "name": "New York",
+    "abbreviation": "NY",
+    "capital": "Albany",
+    "region": "Northeast"
+  },
+  {
+    "name": "California",
+    "abbreviation": "CA",
+    "capital": "Sacramento",
+    "region": "West"
+  },
+  {
+    "name": "Texas",
+    "abbreviation": "TX",
+    "capital": "Austin",
+    "region": "South"
+  },
+  {
+    "name": "Florida",
+    "abbreviation": "FL",
+    "capital": "Tallahassee",
+    "region": "South"
+  },
+
+  {
+    "name": "Illinois",
+    "abbreviation": "IL",
+    "capital": "Springfield",
+    "region": "Midwest"
+  },
+  {
+    "name": "Washington",
+    "abbreviation": "WA",
+    "capital": "Olympia",
+    "region": "West"
+  }
+]
