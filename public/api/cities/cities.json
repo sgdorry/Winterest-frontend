@@ -1,0 +1,32 @@
+[
+  {
+    "name": "New York City",
+    "state": "New York",
+    "stateAbbreviation": "NY",
+    "population": 8804190
+  },
+  {
+    "name": "Los Angeles",
+    "state": "California",
+    "stateAbbreviation": "CA",
+    "population": 3898747
+  },
+  {
+    "name": "Chicago",
+    "state": "Illinois",
+    "stateAbbreviation": "IL",
+    "population": 2746388
+  },
+  {
+    "name": "Houston",
+    "state": "Texas",
+    "stateAbbreviation": "TX",
+    "population": 2304580
+  },
+  {
+    "name": "Phoenix",
+    "state": "Arizona",
+    "stateAbbreviation": "AZ",
+    "population": 1608139
+  }
+]
