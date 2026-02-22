@@ -1,0 +1,45 @@
+.game-home {
+  padding: 60px 20px;
+  text-align: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.titlebox {
+  margin-bottom: 60px;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #555;
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.primary-btn {
+  padding: 12px 24px;
+  background-color: #222;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.primary-btn:hover {
+  background-color: #444;
+}
+
+
