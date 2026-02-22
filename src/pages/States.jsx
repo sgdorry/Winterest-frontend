@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchStates } from "../api/client";
+import { fetchCountries } from "../api/geo";
 
 function States() {
   const [states, setStates] = useState([]);

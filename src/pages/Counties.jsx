@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchCounties } from "../api/client";
+import { fetchCountries } from "../api/geo";
 
 function Counties() {
   const [counties, setCounties] = useState([]);

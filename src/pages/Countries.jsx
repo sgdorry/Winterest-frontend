@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchCountries } from "../api/client";
+import { fetchCountries } from "../api/geo";
 
 function Countries() {
   const [countries, setCountries] = useState([]);
@@ -27,9 +27,8 @@ function Countries() {
       {error && <p>{error}</p>}
       <ul>
         {countries.map((country) => (
-          <li key={country.name}>
-            {country.name} - Capital: {country.capital} - Continent:{" "}
-            {country.continent}
+          <li key={country.country_id}>
+          {country.name} - Continent: {country.continent}
           </li>
         ))}
       </ul>
