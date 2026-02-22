@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchCountries } from "../api/geo";
+import { fetchCounties } from "../api/geo";
 
 function Counties() {
   const [counties, setCounties] = useState([]);
@@ -21,17 +21,25 @@ function Counties() {
   }, []);
 
   return (
-    <main>
+   <main>
       <h1>Counties</h1>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
+
       <ul>
-        {counties.map((county) => (
-          <li key={`${county.name}-${county.stateAbbreviation}`}>
-            {county.name}, {county.state} ({county.stateAbbreviation}) - Seat:{" "}
-            {county.seat}
-          </li>
-        ))}
+        {counties.map((county) => {
+          const stateCode = county.state_code ?? county.STATE_CODE ?? "";
+          return (
+            <li key={`${county.name}-${stateCode}`}>
+              {county.name}, {county.state}
+              {stateCode ? ` (${stateCode})` : ""} — Seat: {county.county_seat} —
+              Population:{" "}
+              {typeof county.population === "number"
+                ? county.population.toLocaleString()
+                : county.population}
+            </li>
+          );
+        })}
       </ul>
     </main>
   );

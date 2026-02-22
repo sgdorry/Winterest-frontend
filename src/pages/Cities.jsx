@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchCountries } from "../api/geo";
+import { fetchCities } from "../api/geo";
 
 function Cities() {
   const [cities, setCities] = useState([]);
@@ -21,15 +21,16 @@ function Cities() {
   }, []);
 
   return (
-    <main>
+   <main>
       <h1>Cities</h1>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       <ul>
         {cities.map((city) => (
-          <li key={`${city.name}-${city.stateAbbreviation}`}>
-            {city.name}, {city.state} ({city.stateAbbreviation}) - Population:{" "}
-            {city.population.toLocaleString()}
+          <li key={`${city.name}-${city.state_code ?? city.state ?? ""}`}>
+            {city.name}, {city.state} ({city.state_code}) — Population:{" "}
+            {city.population}
+            {city.mayor ? ` — Mayor: ${city.mayor}` : ""}
           </li>
         ))}
       </ul>
