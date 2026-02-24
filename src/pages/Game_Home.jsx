@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Game_Home.css";
 
 export default function Game_Home() {
+  const navigate = useNavigate();
   return (
     <div className="home">
       <section className="titlebox">
@@ -11,7 +12,7 @@ export default function Game_Home() {
         </p>
 
         <div className="cta-buttons">
-          <Link to="/game" className="primary-btn">
+          <Link to="/flag-quiz" className="primary-btn">
             Start New Game
           </Link>
         </div>
