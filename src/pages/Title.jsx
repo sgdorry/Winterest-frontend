@@ -15,7 +15,6 @@ export default function Title() {
 
       <div className="landing-content">
         
-
         <h1 className="landing-title">Winpoint</h1>
 
         <hr className="landing-divider" />
