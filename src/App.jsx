@@ -10,6 +10,7 @@ import FlagQuiz from './pages/FlagQuiz.jsx';
 import Title from './pages/Title.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
+import Rules from './pages/Rules.jsx';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
     <div className="app">
       <Routes>
         <Route path="/" element={<Title />} />
+        <Route path="/how-to-play" element={<Rules />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route

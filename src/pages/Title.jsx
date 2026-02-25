@@ -20,7 +20,7 @@ export default function Title() {
         <hr className="landing-divider" />
 
         <p className="landing-tagline">
-          Guess the place in 6 tries using geography hints.
+          Guess the place in 5 tries using geography hints.
         </p>
 
 
@@ -28,7 +28,7 @@ export default function Title() {
           <Link to="/home" className="btn-play">
             Play
           </Link>
-          <Link to="/home" className="btn-secondary">
+          <Link to="/how-to-play" className="btn-secondary">
             How to Play
           </Link>
         </div>
