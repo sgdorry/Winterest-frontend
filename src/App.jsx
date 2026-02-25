@@ -8,6 +8,8 @@ import States from "./pages/States";
 import Game_Home from './pages/Game_Home';
 import FlagQuiz from './pages/FlagQuiz.jsx';
 import Title from './pages/Title.jsx';
+import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
 
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
     <div className="app">
       <Routes>
         <Route path="/" element={<Title />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route
           path="*"
           element={

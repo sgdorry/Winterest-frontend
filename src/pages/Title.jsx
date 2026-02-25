@@ -33,6 +33,11 @@ export default function Title() {
           </Link>
         </div>
 
+        <div className="landing-auth-links">
+          <Link to="/login" className="auth-link">Sign in</Link>
+          <Link to="/signup" className="auth-link">Create account</Link>
+        </div>
+
         <div className="landing-categories">
           <span className="category-pill">Flags</span>
           <span className="category-pill">Countries</span>

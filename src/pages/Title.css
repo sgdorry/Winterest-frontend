@@ -152,6 +152,20 @@
   font-weight: 400;
 }
 
+.landing-auth-links {
+  display: flex;
+  gap: 24px;
+  margin: 4px 0 0;
+  animation: fadeInUp 0.8s ease-out 0.75s both;
+}
+
+.auth-link {
+  font-size: 1.1rem;
+  color: #2c2416;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .landing-categories {
   display: flex;
   gap: 12px;
