@@ -1,26 +1,31 @@
-.PHONY: all prod github install dev build preview clean
+FORCE:
 
-all: install
-
-prod: github
+all: all_tests build
+prod: all_tests github
 
 github: FORCE
 	- git commit -a
 	git push origin master
 
-install:
+all_tests: lint test FORCE
+
+dev_env: FORCE
 	npm install
 
-dev:
+dev: FORCE
 	npm run dev
 
-build:
+build: FORCE
 	npm run build
 
-preview:
+preview: FORCE
 	npm run preview
 
-clean:
-	rm -rf node_modules dist
+lint: FORCE
+	npm run lint
 
-FORCE:
+test: FORCE
+	npm run test
+
+clean: FORCE
+	rm -rf node_modules dist
