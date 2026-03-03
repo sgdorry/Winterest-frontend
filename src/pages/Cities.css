@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap');
 
-/* --- Page container --- */
 .cities-page {
   min-height: 100vh;
   background: #f5f0e8;
@@ -9,16 +8,20 @@
   padding: 40px 20px 56px;
 }
 
-/* --- Centered shell --- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .cities-shell {
   width: min(600px, 100%);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  animation: fadeInUp 0.8s ease-out both;
 }
 
-/* --- Header card --- */
 .cities-header {
   background: rgba(255, 255, 255, 0.58);
   border: 1px solid rgba(196, 185, 154, 0.6);
@@ -26,6 +29,7 @@
   padding: 28px;
   box-shadow: 0 10px 30px rgba(44, 36, 22, 0.06);
   text-align: center;
+  animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
 .cities-eyebrow {
@@ -52,11 +56,12 @@
   line-height: 1.5;
 }
 
-/* --- Hints section --- */
+/*Hints section */
 .cities-hints {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  animation: fadeInUp 0.8s ease-out 0.45s both;
 }
 
 .hint-card {
@@ -77,7 +82,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* --- Game messages --- */
+/* Game messages */
 .cities-message {
   text-align: center;
   padding: 20px 24px;
@@ -100,7 +105,7 @@
   color: #7a4a3a;
 }
 
-/* --- Loading / Error --- */
+/* Loading / Error */
 .cities-loading,
 .cities-error {
   text-align: center;
@@ -113,14 +118,15 @@
   color: #7a4a3a;
 }
 
-/* --- Guess board (5-row grid) --- */
+/* Guess board */
 .cities-board {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  animation: fadeInUp 0.8s ease-out 0.55s both;
 }
 
-/* --- Individual guess row --- */
+/* Individual guess row */
 .cities-guess-row {
   background: rgba(255, 255, 255, 0.58);
   border: 1px solid rgba(196, 185, 154, 0.6);
@@ -143,7 +149,6 @@
   box-shadow: 0 10px 30px rgba(44, 36, 22, 0.12);
 }
 
-/* Row number label */
 .cities-row-number {
   font-size: 0.82rem;
   font-weight: 700;
@@ -154,7 +159,6 @@
   flex-shrink: 0;
 }
 
-/* Text input inside each row */
 .cities-input {
   flex: 1;
   padding: 12px 16px;
@@ -184,16 +188,15 @@
   cursor: not-allowed;
 }
 
-/* Active guess row */
 .cities-guess-row--active {
   border-color: #a89979;
 }
 
-/* --- Actions area (submit button) --- */
 .cities-actions {
   display: flex;
   justify-content: center;
   padding-top: 8px;
+  animation: fadeInUp 0.8s ease-out 0.5s both;
 }
 
 .cities-submit {
@@ -235,7 +238,6 @@
   transform: translateY(0);
 }
 
-/* --- Responsive --- */
 @media (max-width: 700px) {
   .cities-page {
     padding: 22px 14px 36px;
