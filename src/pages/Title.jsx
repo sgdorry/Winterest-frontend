@@ -2,47 +2,35 @@ import { Link } from "react-router-dom";
 import "./Title.css";
 
 export default function Title() {
-  const today = new Date();
-  const formatted = today.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const images = {
+    logo: "/landing/winpoint-logo.png",
+    leaderboard: "/landing/leaderboard-button.png",
+    play: "/landing/play-button.png",
+    howToPlay: "/landing/how-to-play-button.png",
+    plane: "/landing/plane.png",
+  };
 
   return (
     <div className="landing">
-
       <div className="landing-content">
-        
-        <h1 className="landing-title">Winpoint</h1>
+        <img className="landing-plane" src={images.plane} alt="" aria-hidden="true" />
+        <img className="landing-logo-image" src={images.logo} alt="Winpoint" />
 
-        <hr className="landing-divider" />
-
-        <p className="landing-tagline">
-          Guess the place in 5 tries using geography hints.
-        </p>
-
-
-        <div className="landing-actions">
-          <Link to="/home" className="btn-play">
-            Play
+        <div className="landing-actions-image-row">
+          <Link to="/home" className="img-link img-link-leaderboard" aria-label="Leaderboard">
+            <img src={images.leaderboard} alt="Leaderboard" />
           </Link>
-          <Link to="/how-to-play" className="btn-secondary">
-            How to Play
+          <Link to="/home" className="img-link img-link-play" aria-label="Play">
+            <img src={images.play} alt="Play" />
+          </Link>
+          <Link to="/home" className="img-link img-link-howto" aria-label="How to play">
+            <img src={images.howToPlay} alt="How to play" />
           </Link>
         </div>
 
         <div className="landing-auth-links">
-          <Link to="/login" className="auth-link">Sign in</Link>
-          <Link to="/signup" className="auth-link">Create account</Link>
-        </div>
-
-        <div className="landing-categories">
-          <span className="category-pill">Flags</span>
-          <span className="category-pill">Countries</span>
-          <span className="category-pill">States</span>
-          <span className="category-pill">Counties</span>
+          <Link to="/login" className="auth-button auth-button-signin">Sign in</Link>
+          <Link to="/signup" className="auth-button auth-button-create">Create account</Link>
         </div>
       </div>
     </div>
