@@ -17,13 +17,13 @@ export default function Title() {
         <img className="landing-logo-image" src={images.logo} alt="Winpoint" />
 
         <div className="landing-actions-image-row">
-          <Link to="/home" className="img-link img-link-leaderboard" aria-label="Leaderboard">
+          <Link to="/leaderboard" className="img-link img-link-leaderboard" aria-label="Leaderboard">
             <img src={images.leaderboard} alt="Leaderboard" />
           </Link>
           <Link to="/home" className="img-link img-link-play" aria-label="Play">
             <img src={images.play} alt="Play" />
           </Link>
-          <Link to="/home" className="img-link img-link-howto" aria-label="How to play">
+          <Link to="/how-to-play" className="img-link img-link-howto" aria-label="How to play">
             <img src={images.howToPlay} alt="How to play" />
           </Link>
         </div>

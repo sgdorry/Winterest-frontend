@@ -11,6 +11,7 @@ import Title from './pages/Title.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import Rules from './pages/Rules.jsx';
+import Leaderboard from './pages/Leaderboard.jsx';
 
 
 function App() {
@@ -18,7 +19,6 @@ function App() {
     <div className="app">
       <Routes>
         <Route path="/" element={<Title />} />
-        <Route path="/how-to-play" element={<Rules />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route
@@ -28,6 +28,8 @@ function App() {
               <Navbar />
               <Routes>
                 <Route path="/home" element={<Game_Home />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/how-to-play" element={<Rules />} />
                 <Route path="/flag-quiz" element={<FlagQuiz />} />
                 <Route path="/countries" element={<Countries />} />
                 <Route path="/states" element={<States />} />
