@@ -22,6 +22,12 @@ function Navbar() {
       <NavLink to="/counties" className="nav-item">
         Counties
       </NavLink>
+      <NavLink to="/leaderboard" className="nav-item">
+        Leaderboard
+      </NavLink>
+      <NavLink to="/how-to-play" className="nav-item">
+        How to Play
+      </NavLink>
     </nav>
   );
 }
