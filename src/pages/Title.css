@@ -96,7 +96,7 @@
   justify-self: end;
   width: min(240px, 35vw);
   z-index: 1;
-  transform: translate(-140px, 0);
+  transform: translate(-158px, 0);
   
 }
 
@@ -106,7 +106,7 @@
   justify-self: start;
   width: min(240px, 35vw);
   z-index: 1;
-  transform: translate(140px, 0);
+  transform: translate(158px, 0);
 }
 
 .img-link-play {
@@ -120,15 +120,15 @@
 }
 
 .img-link-leaderboard:hover {
-  transform: translate(-140px, -3px);
+  transform: translate(-158px, -3px);
 }
 
 .img-link-howto:hover {
-  transform: translate(140px, -3px);
+  transform: translate(158px, -3px);
 }
 
 .img-link-play:hover {
-  transform: translate(-50%, -55%);
+  transform: translate(-50%, -65%);
 }
 
 .landing-auth-links {
