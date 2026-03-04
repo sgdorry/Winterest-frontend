@@ -185,7 +185,7 @@
 
 .cities-input:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
+  cursor: url('/cursor.cur'), not-allowed;
 }
 
 .cities-guess-row--active {
@@ -209,7 +209,7 @@
   font-size: 1.15rem;
   font-weight: 600;
   letter-spacing: 0.03em;
-  cursor: pointer;
+  cursor: url('/cursor.cur'), pointer;
   transition: all 0.25s ease;
   position: relative;
   overflow: hidden;

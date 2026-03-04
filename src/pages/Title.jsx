@@ -7,6 +7,8 @@ export default function Title() {
     leaderboard: "/landing/leaderboard-button.png",
     play: "/landing/play-button.png",
     howToPlay: "/landing/how-to-play-button.png",
+    signIn: "/landing/sign-in.png",
+    createAccount: "/landing/create-account.png",
     plane: "/landing/plane.png",
   };
 
@@ -29,8 +31,12 @@ export default function Title() {
         </div>
 
         <div className="landing-auth-links">
-          <Link to="/login" className="auth-button auth-button-signin">Sign in</Link>
-          <Link to="/signup" className="auth-button auth-button-create">Create account</Link>
+          <Link to="/login" className="img-link img-link-auth" aria-label="Sign in">
+            <img src={images.signIn} alt="Sign in" />
+          </Link>
+          <Link to="/signup" className="img-link img-link-auth" aria-label="Create account">
+            <img src={images.createAccount} alt="Create account" />
+          </Link>
         </div>
       </div>
     </div>
