@@ -13,6 +13,7 @@ import Signup from './pages/Signup.jsx';
 import Rules from './pages/Rules.jsx';
 import Leaderboard from './pages/Leaderboard.jsx';
 
+console.log(import.meta.env.VITE_API_BASE_URL)
 
 function App() {
   return (
@@ -43,5 +44,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

@@ -1,0 +1,3 @@
+#!/bin/bash
+export VITE_API_BASE_URL=https://placeholder.com #fix later, placeholder for now
+npm run dev
