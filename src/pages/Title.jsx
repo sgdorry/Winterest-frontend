@@ -22,7 +22,7 @@ export default function Title() {
           <Link to="/leaderboard" className="img-link img-link-leaderboard" aria-label="Leaderboard">
             <img src={images.leaderboard} alt="Leaderboard" />
           </Link>
-          <Link to="/home" className="img-link img-link-play" aria-label="Play">
+          <Link to="/play" className="img-link img-link-play" aria-label="Play">
             <img src={images.play} alt="Play" />
           </Link>
           <Link to="/how-to-play" className="img-link img-link-howto" aria-label="How to play">
