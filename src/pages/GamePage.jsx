@@ -6,6 +6,10 @@ export default function GamePage({}) {
     const [targetEntity, setTargetEntity] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const resetGame = () => {
+      setEntityType(null);
+      setTargetEntity(null);
+    }
     useEffect(() => {
       if (!entityType) return;
       const load = async () => {
@@ -54,7 +58,7 @@ export default function GamePage({}) {
         {loading && <p>Loading...</p>}
         {error && <p>{error}</p>}
         {targetEntity && !loading && !error &&(
-        <Game entityType={entityType} targetEntity={targetEntity} />
+        <Game entityType={entityType} targetEntity={targetEntity} onReset={resetGame}/>
         )}
     </div>
   )

@@ -124,6 +124,13 @@ export default function game(props) {
             The answer was <strong>{targetEntity.name}</strong>, {targetEntity.state}.
           </div>
         )}
+        {gameStatus === "won" || gameStatus === "lost" ? (
+            <div className="game-actions">
+                <button className="game-submit" onClick={props.onReset}>
+                Play Again
+                </button>
+            </div>
+        ) : null}
 
       </div>
     </main>
