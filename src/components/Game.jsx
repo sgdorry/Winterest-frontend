@@ -1,16 +1,39 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import HintCard from "../components/HintCard";
 import "./Game.css";
 
 const TOTAL_GUESSES = 5;
 
-export default function game(props) {
-    const {entityType, targetEntity} = props; 
-    const [guesses, setGuesses] = useState(Array(TOTAL_GUESSES).fill(""));
-    const [currentGuess, setCurrentGuess] = useState(0);
-    const [gameStatus, setGameStatus] = useState("idle"); 
+const SINGULAR_LABELS = {
+  cities: "city",
+  states: "state",
+  countries: "country",
+};
 
-    if (!targetEntity) return null;
+export default function Game({ entityType, targetEntity, onReset, onGameEnd }) {
+  const [guesses, setGuesses] = useState(Array(TOTAL_GUESSES).fill(""));
+  const [currentGuess, setCurrentGuess] = useState(0);
+  const [gameStatus, setGameStatus] = useState("idle");
+  const gameEndFired = useRef(false);
+
+  const label = SINGULAR_LABELS[entityType] || entityType;
+  const hints = targetEntity?.hints || [];
+
+  useEffect(() => {
+    if (gameEndFired.current) return;
+    if (gameStatus !== "won" && gameStatus !== "lost") return;
+    gameEndFired.current = true;
+
+    const score = gameStatus === "won"
+      ? (TOTAL_GUESSES - currentGuess) * 100
+      : 0;
+
+    if (onGameEnd) {
+      onGameEnd({ score, guessesUsed: currentGuess + 1 });
+    }
+  }, [gameStatus, currentGuess, onGameEnd]);
+
+  if (!targetEntity) return null;
 
   const handlePlay = () => {
     setGameStatus("playing");
@@ -40,7 +63,11 @@ export default function game(props) {
       setCurrentGuess((prev) => prev + 1);
     }
   };
+
   const gameOver = gameStatus !== "playing";
+  const score = gameStatus === "won"
+    ? (TOTAL_GUESSES - currentGuess) * 100
+    : 0;
 
   return (
     <main className="game-page">
@@ -48,9 +75,9 @@ export default function game(props) {
 
         <header className="game-header">
           <p className="game-eyebrow">Winpoint</p>
-          <h1 className="game-title">Guess the {entityType}</h1>
+          <h1 className="game-title">Guess the {label}</h1>
           <p className="game-subtitle">
-            You have 5 guesses to name the mystery city.
+            You have {TOTAL_GUESSES} guesses to name the mystery {label}.
             Type your answer in each row below.
           </p>
         </header>
@@ -65,17 +92,17 @@ export default function game(props) {
 
         {gameStatus !== "idle" && (
           <>
-            {targetEntity && (
+            {hints.length > 0 && (
               <div className="game-hints">
-                {targetEntity.hints.slice(0, currentGuess + 1).map((hint, i) => (
+                {hints.slice(0, currentGuess + 1).map((hint, i) => (
                   <HintCard key={i} hint={hint} />
                 ))}
               </div>
             )}
 
-            {gameStatus === "lost" && targetEntity && (
+            {gameStatus === "lost" && hints.length > currentGuess + 1 && (
               <div className="game-hints">
-                {targetEntity.hints.slice(currentGuess + 1).map((hint, i) => (
+                {hints.slice(currentGuess + 1).map((hint, i) => (
                   <HintCard key={`final-${i}`} hint={hint} />
                 ))}
               </div>
@@ -112,25 +139,28 @@ export default function game(props) {
           </>
         )}
 
-        
         {gameStatus === "won" && (
           <div className="game-message game-message--won">
-            You won! The city was <strong>{targetEntity.name}</strong>.
+            You won! The {label} was <strong>{targetEntity.name}</strong>.
+            {" "}You scored <strong>{score}</strong> points!
           </div>
         )}
 
         {gameStatus === "lost" && (
           <div className="game-message game-message--lost">
-            The answer was <strong>{targetEntity.name}</strong>, {targetEntity.state}.
+            The answer was <strong>{targetEntity.name}</strong>
+            {targetEntity.state && <>, {targetEntity.state}</>}.
+            {" "}You scored <strong>0</strong> points.
           </div>
         )}
-        {gameStatus === "won" || gameStatus === "lost" ? (
-            <div className="game-actions">
-                <button className="game-submit" onClick={props.onReset}>
-                Play Again
-                </button>
-            </div>
-        ) : null}
+
+        {(gameStatus === "won" || gameStatus === "lost") && (
+          <div className="game-actions">
+            <button className="game-submit" onClick={onReset}>
+              Play Again
+            </button>
+          </div>
+        )}
 
       </div>
     </main>
