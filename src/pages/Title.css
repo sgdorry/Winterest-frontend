@@ -6,7 +6,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #f5f0e8;
+  background-color: #f5f0e8;
   position: relative;
   overflow: hidden;
   font-family: 'Outfit', sans-serif;
@@ -14,7 +14,7 @@
 
 .landing-content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -183,6 +183,22 @@
     align-items: center;
   }
 }
+.landing::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  pointer-events: none;
+  background-image: url('/landing/map-background.png'), url('/landing/map-background.png');
+  background-size: 50% 100%, 50% 100%;
+  background-position: 0 50%, 100% 50%;
+  background-repeat: no-repeat;
+  animation: mapWestward 45s linear infinite;
+  z-index: 0;
+}
+
 .landing::before {
   content: "";
   position: absolute;
@@ -193,10 +209,15 @@
     linear-gradient(90deg, rgba(120, 90, 60, 0.08) 1px, transparent 1px);
   background-size: 42px 42px, 42px 42px;
   animation: gridDrift 30s linear infinite;
-  z-index: 0;
+  z-index: 1;
 }
 
 @keyframes gridDrift {
   from { transform: translate(0, 0); }
   to   { transform: translate(-30px, -20px); }
+}
+
+@keyframes mapWestward {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
