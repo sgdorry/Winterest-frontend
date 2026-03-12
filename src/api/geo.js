@@ -8,7 +8,9 @@ async function getJson(path, errorMsg) {
     try {
       const text = await res.text();
       detail = text ? ` (${text})` : "";
-    } catch {}
+    } catch {
+      //empty catch, causing make prod error
+    }
     throw new Error(`${errorMsg} [${res.status}]${detail}`);
   }
 
