@@ -1,0 +1,21 @@
+.leaderboard-loading,
+.leaderboard-error {
+  text-align: center;
+  padding: 32px 16px;
+  color: #6b5d4a;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.leaderboard-error {
+  color: #9e4a4a;
+}
+
+.leaderboard-rank {
+  font-weight: 700;
+  color: #2c2416;
+}
+
+.leaderboard-game-type {
+  text-transform: capitalize;
+}
