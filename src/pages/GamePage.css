@@ -1,0 +1,131 @@
+.game-select-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  padding: 108px 24px 56px;
+  background-color: #f5f0e8;
+}
+
+.game-select-page::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  pointer-events: none;
+  background-image: url('/landing/map-background.png'), url('/landing/map-background.png');
+  background-size: 50% 100%, 50% 100%;
+  background-position: 0 50%, 100% 50%;
+  background-repeat: no-repeat;
+  animation: mapWestward 45s linear infinite;
+  z-index: 0;
+}
+
+.game-select-page::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10%;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(120, 90, 60, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 90, 60, 0.08) 1px, transparent 1px);
+  background-size: 42px 42px, 42px 42px;
+  animation: gridDrift 30s linear infinite;
+  z-index: 1;
+}
+
+.game-select-shell {
+  position: relative;
+  z-index: 2;
+  width: min(1020px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 38px;
+  animation: gameSelectFadeIn 0.8s ease-out both;
+}
+
+.game-select-title-image {
+  width: min(720px, 82vw);
+  height: auto;
+  display: block;
+}
+
+.game-select-card-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 3vw, 36px);
+  align-items: start;
+}
+
+.game-select-card {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.22s ease, filter 0.22s ease;
+}
+
+.game-select-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 36px;
+  box-shadow: 0 14px 40px rgba(44, 36, 22, 0.1);
+}
+
+.game-select-card:hover {
+  transform: translateY(-8px);
+  filter: saturate(1.03);
+}
+
+.game-select-card:focus-visible {
+  outline: 3px solid #2c2416;
+  outline-offset: 8px;
+  border-radius: 36px;
+}
+
+.game-select-status {
+  margin: 0;
+  min-height: 1.5em;
+  text-align: center;
+  color: #6b5d4a;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.game-select-status-error {
+  color: #7a4a3a;
+}
+
+@keyframes gameSelectFadeIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gridDrift {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-30px, -20px); }
+}
+
+@keyframes mapWestward {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (max-width: 800px) {
+  .game-select-page {
+    padding-top: 92px;
+  }
+
+  .game-select-card-grid {
+    grid-template-columns: 1fr;
+    width: min(440px, 100%);
+  }
+}

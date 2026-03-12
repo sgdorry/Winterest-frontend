@@ -2,12 +2,31 @@ import { useEffect, useState, useCallback } from "react";
 import Game from "../components/Game";
 import { fetchCities, fetchStates, fetchCountries } from "../api/geo";
 import { submitScore } from "../api/scores";
+import "./GamePage.css";
 
 const FETCH_BY_TYPE = {
   cities: fetchCities,
   states: fetchStates,
   countries: fetchCountries,
 };
+
+const GAME_OPTIONS = [
+  {
+    id: "countries",
+    label: "Countries",
+    image: "/game-select/countries-select.png",
+  },
+  {
+    id: "states",
+    label: "States",
+    image: "/game-select/states-select.png",
+  },
+  {
+    id: "cities",
+    label: "Cities",
+    image: "/game-select/cities-select.png",
+  },
+];
 
 export default function GamePage() {
   const [entityType, setEntityType] = useState(null);
@@ -77,25 +96,48 @@ export default function GamePage() {
     [entityType],
   );
 
+  if (targetEntity && !loading && !error) {
+    return (
+      <Game
+        entityType={entityType}
+        targetEntity={targetEntity}
+        onReset={resetGame}
+        onGameEnd={handleGameEnd}
+      />
+    );
+  }
+
   return (
-    <div>
-      <div>
-        <button onClick={() => setEntityType("cities")}>Cities</button>
-        <button onClick={() => setEntityType("states")}>States</button>
-        <button onClick={() => setEntityType("countries")}>Countries</button>
-      </div>
-      {!entityType && <p>Please select an entity type to start the game</p>}
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      {scoreError && <p>{scoreError}</p>}
-      {targetEntity && !loading && !error && (
-        <Game
-          entityType={entityType}
-          targetEntity={targetEntity}
-          onReset={resetGame}
-          onGameEnd={handleGameEnd}
+    <main className="game-select-page">
+      <section className="game-select-shell" aria-labelledby="game-select-title">
+        <img
+          className="game-select-title-image"
+          src="/game-select/game-select.png"
+          alt="Game Select"
+          id="game-select-title"
         />
-      )}
-    </div>
+
+        <div className="game-select-card-grid" role="group" aria-label="Choose a game type">
+          {GAME_OPTIONS.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              className="game-select-card"
+              onClick={() => setEntityType(option.id)}
+              aria-label={option.label}
+            >
+              <img src={option.image} alt={option.label} />
+            </button>
+          ))}
+        </div>
+
+        {!entityType && (
+          <p className="game-select-status">Please select a game mode to start the game.</p>
+        )}
+        {loading && <p className="game-select-status">Loading...</p>}
+        {error && <p className="game-select-status game-select-status-error">{error}</p>}
+        {scoreError && <p className="game-select-status game-select-status-error">{scoreError}</p>}
+      </section>
+    </main>
   );
 }
