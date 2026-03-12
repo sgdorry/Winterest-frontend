@@ -7,7 +7,7 @@ export default function Login() {
     <div className="landing">
       <div className="landing-content">
 
-        <Link to="/" style={{ alignSelf: 'flex-start', fontSize: '0.95rem', color: '#9a8b76', textDecoration: 'none', fontWeight: 500 }}>
+        <Link to="/" className="auth-back-link">
           ← Back
         </Link>
 

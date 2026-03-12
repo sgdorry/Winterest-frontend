@@ -59,3 +59,11 @@
 @media (max-width: 520px) {
   .auth-form { width: 100%; padding: 0 32px; }
 }
+
+.auth-back-link {
+  align-self: flex-start;
+  font-size: 0.95rem;
+  color: #9a8b76;
+  text-decoration: none;
+  font-weight: 500;
+}
