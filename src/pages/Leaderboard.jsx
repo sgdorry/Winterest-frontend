@@ -1,12 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { fetchLeaderboard } from "../api/scores";
 import "./Rules.css";
 import "./Leaderboard.css";
 
 export default function Leaderboard() {
-  const [scores] = useState([]);
-  const [loading] = useState(false);
-  const [error] = useState(null);
+  const [scores, setScores] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchLeaderboard()
+      .then((data) => {
+        if (!cancelled) setScores(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err.message);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <main className="rules-page">

@@ -1,5 +1,17 @@
 import { API_BASE } from "./client";
 
+export async function fetchLeaderboard() {
+  const res = await fetch(`${API_BASE}/scores`);
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Leaderboard could not be loaded. [${res.status}] ${text}`);
+  }
+
+  const data = await res.json();
+  return data.scores;
+}
+
 export async function submitScore({ entityType, score, guessesUsed }) {
   const res = await fetch(`${API_BASE}/scores`, {
     method: "POST",
