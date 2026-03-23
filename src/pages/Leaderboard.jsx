@@ -38,7 +38,7 @@ export default function Leaderboard() {
             Top scores from all players across every game mode.
           </p>
           <div className="rules-actions">
-            <Link to="/home" className="rules-btn rules-btn-primary">
+            <Link to="/play" className="rules-btn rules-btn-primary">
               Play
             </Link>
             <Link to="/" className="rules-btn rules-btn-secondary">

@@ -17,7 +17,7 @@ export default function Rules() {
             <Link to="/" className="rules-btn rules-btn-secondary">
               Back
             </Link>
-            <Link to="/home" className="rules-btn rules-btn-primary">
+            <Link to="/play" className="rules-btn rules-btn-primary">
               Play
             </Link>
           </div>
