@@ -13,14 +13,24 @@ export async function fetchLeaderboard() {
 }
 
 export async function submitScore({ entityType, score, guessesUsed }) {
+  const body = {
+    entity_type: entityType,
+    score,
+    guesses_used: guessesUsed,
+  };
+
+  try {
+    const stored = JSON.parse(localStorage.getItem("user"));
+    if (stored && stored.id) {
+      body.user_id = stored.id;
+    }
+  } catch {
+  }
+
   const res = await fetch(`${API_BASE}/scores`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      entity_type: entityType,
-      score,
-      guesses_used: guessesUsed,
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!res.ok) {
