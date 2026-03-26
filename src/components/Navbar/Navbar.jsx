@@ -16,6 +16,9 @@ function Navbar() {
       <NavLink to="/how-to-play" className="nav-item">
         How to Play
       </NavLink>
+      <NavLink to="/profile" className="nav-item">
+        Profile
+      </NavLink>
     </nav>
   );
 }

@@ -8,6 +8,7 @@ import Signup from './pages/Signup.jsx';
 import Rules from './pages/Rules.jsx';
 import Leaderboard from './pages/Leaderboard.jsx';
 import GamePage from './pages/GamePage.jsx';
+import Profile from './pages/Profile.jsx';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/leaderboard" element={<Leaderboard />} />
                 <Route path="/how-to-play" element={<Rules />} />
                 <Route path="/flag-quiz" element={<FlagQuiz />} />
+                <Route path="/profile" element={<Profile />} />
               </Routes>
             </>
           }
