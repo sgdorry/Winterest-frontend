@@ -25,6 +25,7 @@ export async function submitScore({ entityType, score, guessesUsed }) {
       body.user_id = stored.id;
     }
   } catch {
+    // This comment should fix "Empty block statement" error
   }
 
   const res = await fetch(`${API_BASE}/scores`, {
