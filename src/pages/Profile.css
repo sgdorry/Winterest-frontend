@@ -1,0 +1,89 @@
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.profile-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 8px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(196, 185, 154, 0.4);
+  border-radius: 14px;
+}
+
+.profile-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c2416;
+}
+
+.profile-stat-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a7b64;
+}
+
+.profile-stat-capitalize {
+  text-transform: capitalize;
+}
+
+.profile-game-type {
+  text-transform: capitalize;
+}
+
+.profile-status {
+  text-align: center;
+  padding: 24px 16px;
+  color: #6b5d4a;
+  font-size: 1rem;
+}
+
+.profile-status-error {
+  color: #9e4a4a;
+}
+
+.profile-empty {
+  text-align: center;
+  padding: 48px 24px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(196, 185, 154, 0.6);
+  border-radius: 20px;
+}
+
+.profile-empty h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  margin: 0 0 12px;
+}
+
+.profile-empty p {
+  color: #6b5d4a;
+  margin: 0 0 20px;
+}
+
+.profile-empty .rules-actions {
+  justify-content: center;
+}
+
+.profile-empty-scores {
+  text-align: center;
+  padding: 24px 16px;
+  color: #6b5d4a;
+}
+
+.profile-empty-scores p {
+  margin: 0 0 16px;
+}
+
+@media (max-width: 700px) {
+  .profile-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
