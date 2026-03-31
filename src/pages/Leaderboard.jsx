@@ -2,16 +2,9 @@ import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { fetchLeaderboard } from "../api/scores";
 import { fetchFriendsLeaderboard, addFriend, removeFriend, fetchFriends } from "../api/friends";
+import { useAuth } from "../context/AuthContext";
 import "./Rules.css";
 import "./Leaderboard.css";
-
-function getUser() {
-  try {
-    const stored = JSON.parse(localStorage.getItem("user"));
-    if (stored && stored.id) return stored;
-  } catch { /* not logged in */ }
-  return null;
-}
 
 export default function Leaderboard() {
   const [scores, setScores] = useState([]);
@@ -24,7 +17,7 @@ export default function Leaderboard() {
   const [modalMsg, setModalMsg] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
 
-  const user = getUser();
+  const { user } = useAuth();
 
   const loadScores = useCallback((selectedFilter) => {
     setLoading(true);

@@ -12,20 +12,15 @@ export async function fetchLeaderboard() {
   return data.scores;
 }
 
-export async function submitScore({ entityType, score, guessesUsed }) {
+export async function submitScore({ entityType, score, guessesUsed, userId }) {
   const body = {
     entity_type: entityType,
     score,
     guesses_used: guessesUsed,
   };
 
-  try {
-    const stored = JSON.parse(localStorage.getItem("user"));
-    if (stored && stored.id) {
-      body.user_id = stored.id;
-    }
-  } catch {
-    // This comment should fix "Empty block statement" error
+  if (userId) {
+    body.user_id = userId;
   }
 
   const res = await fetch(`${API_BASE}/scores`, {

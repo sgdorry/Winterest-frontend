@@ -1,11 +1,13 @@
 import { Link, useNavigate} from "react-router-dom";
 import {useState} from "react";
-import { login } from "../api/users";
+import { login as apiLogin } from "../api/users";
+import { useAuth } from "../context/AuthContext";
 import "./Title.css";
 import "./Auth.css";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,10 +22,10 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const data = await login(email, password);
+      const data = await apiLogin(email, password);
       setMessage(data.message || "Login successful");
 
-      localStorage.setItem("user", JSON.stringify(data.user));
+      login(data.user);
 
       setTimeout(() => {
         navigate("/home");

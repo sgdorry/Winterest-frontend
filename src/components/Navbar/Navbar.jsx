@@ -1,7 +1,10 @@
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import "./Navbar.css";
 
 function Navbar() {
+  const { user } = useAuth();
+
   return (
     <nav className="navbar">
       <NavLink to="/" className="nav-item">

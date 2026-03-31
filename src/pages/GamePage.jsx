@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import Game from "../components/Game";
 import { fetchCities, fetchStates, fetchCountries } from "../api/geo";
 import { submitScore } from "../api/scores";
+import { useAuth } from "../context/AuthContext";
 import "./GamePage.css";
 
 const FETCH_BY_TYPE = {
@@ -29,6 +30,7 @@ const GAME_OPTIONS = [
 ];
 
 export default function GamePage() {
+  const { user } = useAuth();
   const [entityType, setEntityType] = useState(null);
   const [targetEntity, setTargetEntity] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -88,12 +90,12 @@ export default function GamePage() {
   const handleGameEnd = useCallback(
     async ({ score, guessesUsed }) => {
       try {
-        await submitScore({ entityType, score, guessesUsed });
+        await submitScore({ entityType, score, guessesUsed, userId: user?.id });
       } catch (err) {
         setScoreError(err.message || "Score could not be submitted.");
       }
     },
-    [entityType],
+    [entityType, user],
   );
 
   if (targetEntity && !loading && !error) {
