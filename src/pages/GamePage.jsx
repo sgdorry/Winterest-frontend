@@ -33,6 +33,7 @@ export default function GamePage() {
   const { user } = useAuth();
   const [entityType, setEntityType] = useState(null);
   const [targetEntity, setTargetEntity] = useState(null);
+  const [allEntities, setAllEntities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [scoreError, setScoreError] = useState("");
@@ -62,6 +63,7 @@ export default function GamePage() {
 
         const entityList = data || [];
         if (entityList.length > 0) {
+          setAllEntities(entityList);
           const randomEntity = entityList[Math.floor(Math.random() * entityList.length)];
           setTargetEntity(randomEntity);
         } else {
@@ -103,6 +105,7 @@ export default function GamePage() {
       <Game
         entityType={entityType}
         targetEntity={targetEntity}
+        allEntities={allEntities}
         onReset={resetGame}
         onGameEnd={handleGameEnd}
       />

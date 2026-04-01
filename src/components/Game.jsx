@@ -10,7 +10,7 @@ const SINGULAR_LABELS = {
   countries: "country",
 };
 
-export default function Game({ entityType, targetEntity, onReset, onGameEnd }) {
+export default function Game({ entityType, targetEntity, allEntities = [], onReset, onGameEnd }) {
   const [guesses, setGuesses] = useState(Array(TOTAL_GUESSES).fill(""));
   const [currentGuess, setCurrentGuess] = useState(0);
   const [gameStatus, setGameStatus] = useState("idle");
@@ -18,6 +18,10 @@ export default function Game({ entityType, targetEntity, onReset, onGameEnd }) {
 
   const label = SINGULAR_LABELS[entityType] || entityType;
   const hints = targetEntity?.hints || [];
+  const useDropdown = entityType === "cities" && allEntities.length > 0;
+  const sortedNames = useDropdown
+    ? [...allEntities].map((e) => e.name).sort()
+    : [];
 
   useEffect(() => {
     if (gameEndFired.current) return;
@@ -78,7 +82,9 @@ export default function Game({ entityType, targetEntity, onReset, onGameEnd }) {
           <h1 className="game-title">Guess the {label}</h1>
           <p className="game-subtitle">
             You have {TOTAL_GUESSES} guesses to name the mystery {label}.
-            Type your answer in each row below.
+            {useDropdown
+              ? " Select your answer from the dropdown below."
+              : " Type your answer in each row below."}
           </p>
         </header>
 
@@ -115,16 +121,31 @@ export default function Game({ entityType, targetEntity, onReset, onGameEnd }) {
                   key={index}
                 >
                   <span className="game-row-number">{index + 1}</span>
-                  <input
-                    className="game-input"
-                    type="text"
-                    value={value}
-                    onChange={(e) => handleChange(index, e.target.value)}
-                    placeholder={`Guess ${index + 1}`}
-                    autoComplete="off"
-                    aria-label={`Guess ${index + 1}`}
-                    disabled={index !== currentGuess || gameOver}
-                  />
+                  {useDropdown ? (
+                    <select
+                      className="game-input"
+                      value={value}
+                      onChange={(e) => handleChange(index, e.target.value)}
+                      aria-label={`Guess ${index + 1}`}
+                      disabled={index !== currentGuess || gameOver}
+                    >
+                      <option value="">Select a city</option>
+                      {sortedNames.map((name) => (
+                        <option key={name} value={name}>{name}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      className="game-input"
+                      type="text"
+                      value={value}
+                      onChange={(e) => handleChange(index, e.target.value)}
+                      placeholder={`Guess ${index + 1}`}
+                      autoComplete="off"
+                      aria-label={`Guess ${index + 1}`}
+                      disabled={index !== currentGuess || gameOver}
+                    />
+                  )}
                 </div>
               ))}
 
