@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { fetchLeaderboard } from "../api/scores";
+import { fetchLeaderboard, fetchLeaderboardFilters } from "../api/scores";
 import { fetchFriendsLeaderboard, addFriend, removeFriend, fetchFriends } from "../api/friends";
 import { useAuth } from "../context/AuthContext";
 import "./Rules.css";
@@ -11,6 +11,7 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
+  const [filterOptions, setFilterOptions] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [friendEmail, setFriendEmail] = useState("");
   const [friends, setFriends] = useState([]);
@@ -36,7 +37,14 @@ export default function Leaderboard() {
 
   useEffect(() => {
     loadScores(filter);
-  }, [filter]);
+  }, [filter, loadScores]);
+
+  useEffect(() => {
+    if (!user) return;
+    fetchLeaderboardFilters()
+      .then((options) => setFilterOptions(options))
+      .catch(() => setFilterOptions([]));
+  }, [user]);
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
@@ -114,8 +122,14 @@ export default function Leaderboard() {
               value={filter}
               onChange={handleFilterChange}
             >
-              <option value="all">All Players</option>
-              <option value="friends">Friends Only</option>
+              {filterOptions.length === 0 && (
+                <option value="all">Loading filters...</option>
+              )}
+              {filterOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
             <button
               className="rules-btn rules-btn-primary"

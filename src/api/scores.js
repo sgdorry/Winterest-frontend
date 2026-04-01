@@ -12,11 +12,24 @@ export async function fetchLeaderboard() {
   return data.scores;
 }
 
-export async function submitScore({ entityType, score, guessesUsed, userId }) {
+export async function fetchLeaderboardFilters() {
+  const res = await fetch(`${API_BASE}/leaderboard/filters`);
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Leaderboard filters could not be loaded. [${res.status}] ${text}`);
+  }
+
+  const data = await res.json();
+  return Array.isArray(data.filters) ? data.filters : [];
+}
+
+export async function submitScore({ entityType, score, guessesUsed, userId, selectedValues = [] }) {
   const body = {
     entity_type: entityType,
     score,
     guesses_used: guessesUsed,
+    selected_values: selectedValues,
   };
 
   if (userId) {

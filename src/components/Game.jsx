@@ -18,7 +18,12 @@ export default function Game({ entityType, targetEntity, allEntities = [], onRes
 
   const label = SINGULAR_LABELS[entityType] || entityType;
   const hints = targetEntity?.hints || [];
-  const useDropdown = entityType === "cities" && allEntities.length > 0;
+  const useDropdown = (
+    entityType === "cities"
+    || entityType === "countries"
+    || entityType === "states"
+  )
+    && allEntities.length > 0;
   const sortedNames = useDropdown
     ? [...allEntities].map((e) => e.name).sort()
     : [];
@@ -31,11 +36,14 @@ export default function Game({ entityType, targetEntity, allEntities = [], onRes
     const score = gameStatus === "won"
       ? (TOTAL_GUESSES - currentGuess) * 100
       : 0;
+    const selectedValues = guesses
+      .map((guess) => guess.trim())
+      .filter(Boolean);
 
     if (onGameEnd) {
-      onGameEnd({ score, guessesUsed: currentGuess + 1 });
+      onGameEnd({ score, guessesUsed: currentGuess + 1, selectedValues });
     }
-  }, [gameStatus, currentGuess, onGameEnd]);
+  }, [gameStatus, currentGuess, guesses, onGameEnd]);
 
   if (!targetEntity) return null;
 
@@ -129,7 +137,7 @@ export default function Game({ entityType, targetEntity, allEntities = [], onRes
                       aria-label={`Guess ${index + 1}`}
                       disabled={index !== currentGuess || gameOver}
                     >
-                      <option value="">Select a city</option>
+                      <option value="">Select a {label}</option>
                       {sortedNames.map((name) => (
                         <option key={name} value={name}>{name}</option>
                       ))}

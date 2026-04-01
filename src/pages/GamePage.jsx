@@ -90,9 +90,15 @@ export default function GamePage() {
   }, [entityType]);
 
   const handleGameEnd = useCallback(
-    async ({ score, guessesUsed }) => {
+    async ({ score, guessesUsed, selectedValues }) => {
       try {
-        await submitScore({ entityType, score, guessesUsed, userId: user?.id });
+        await submitScore({
+          entityType,
+          score,
+          guessesUsed,
+          userId: user?.id,
+          selectedValues,
+        });
       } catch (err) {
         setScoreError(err.message || "Score could not be submitted.");
       }

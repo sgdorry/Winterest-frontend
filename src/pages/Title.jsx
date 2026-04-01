@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./Title.css";
 
 export default function Title() {
@@ -11,6 +12,14 @@ export default function Title() {
     createAccount: "/landing/create-account.png",
     plane: "/landing/plane.png",
   };
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <div className="landing">
