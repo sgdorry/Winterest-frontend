@@ -11,6 +11,7 @@ export default function Title() {
     signIn: "/landing/sign-in.png",
     createAccount: "/landing/create-account.png",
     plane: "/landing/plane.png",
+    profilePic: "/landing/profile-pic.png",
   };
   const [user, setUser] = useState(null);
 
@@ -23,6 +24,9 @@ export default function Title() {
 
   return (
     <div className="landing">
+      <Link to={user ? "/profile" : "/login"} className="landing-profile-link" aria-label="Profile">
+        <img src={images.profilePic} alt="Profile" className="landing-profile-pic" />
+      </Link>
       <div className="landing-content">
         <img className="landing-plane" src={images.plane} alt="" aria-hidden="true" />
         <img className="landing-logo-image" src={images.logo} alt="Winpoint" />

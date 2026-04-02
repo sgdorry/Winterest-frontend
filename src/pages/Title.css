@@ -131,6 +131,24 @@
   transform: translate(-50%, -65%);
 }
 
+.landing-profile-link {
+  position: absolute;
+  top: 32px;
+  right: 40px;
+  z-index: 10;
+  transition: transform 0.2s ease;
+}
+
+.landing-profile-link:hover {
+  transform: translateY(-2px);
+}
+
+.landing-profile-pic {
+  width: 52px;
+  height: 52px;
+  display: block;
+}
+
 .landing-auth-links {
   display: flex;
   gap: 16px;
