@@ -85,16 +85,24 @@ export default function Game({ entityType, targetEntity, allEntities = [], onRes
     <main className="game-page">
       <div className="game-shell">
 
-        <header className="game-header">
-          <p className="game-eyebrow">Winpoint</p>
-          <h1 className="game-title">Guess the {label}</h1>
-          <p className="game-subtitle">
-            You have {TOTAL_GUESSES} guesses to name the mystery {label}.
-            {useDropdown
-              ? " Select your answer from the dropdown below."
-              : " Type your answer in each row below."}
-          </p>
-        </header>
+        {entityType === "countries" ? (
+          <img
+            src="/guess-the-country.png"
+            alt="Guess the Country"
+            className="game-header-img"
+          />
+        ) : (
+          <header className="game-header">
+            <p className="game-eyebrow">Winpoint</p>
+            <h1 className="game-title">Guess the {label}</h1>
+            <p className="game-subtitle">
+              You have {TOTAL_GUESSES} guesses to name the mystery {label}.
+              {useDropdown
+                ? " Select your answer from the dropdown below."
+                : " Type your answer in each row below."}
+            </p>
+          </header>
+        )}
 
         {gameStatus === "idle" && (
           <div className="game-actions">

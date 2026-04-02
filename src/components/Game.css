@@ -32,6 +32,13 @@
   animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
+.game-header-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  animation: fadeInUp 0.8s ease-out 0.3s both;
+}
+
 .game-eyebrow {
   margin: 0 0 10px;
   font-size: 0.9rem;
