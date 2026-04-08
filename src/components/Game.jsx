@@ -91,6 +91,12 @@ export default function Game({ entityType, targetEntity, allEntities = [], onRes
             alt="Guess the Country"
             className="game-header-img"
           />
+        ) : entityType === "states" ? (
+          <img
+            src="/guess-the-state.png"
+            alt="Guess the State"
+            className="game-header-img"
+          />
         ) : (
           <header className="game-header">
             <p className="game-eyebrow">Winpoint</p>
