@@ -1,57 +1,98 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { fetchLeaderboard } from "../api/scores";
+import { fetchFriends, fetchFriendsLeaderboard } from "../api/friends";
 import "./Rules.css";
 import "./Profile.css";
 
-function computeStats(scores) {
-  if (scores.length === 0) return null;
-
-  const best = scores.reduce((a, b) => (b.score > a.score ? b : a));
-  const totalScore = scores.reduce((sum, s) => sum + s.score, 0);
-
-  const typeCounts = {};
-  for (const s of scores) {
-    typeCounts[s.entity_type] = (typeCounts[s.entity_type] || 0) + 1;
-  }
-  const favoriteType = Object.entries(typeCounts).reduce((a, b) =>
-    b[1] > a[1] ? b : a
-  )[0];
-
-  return {
-    gamesPlayed: scores.length,
-    totalScore,
-    bestScore: best.score,
-    bestGame: best.entity_type,
-    favoriteType,
-  };
-}
-
 export default function Profile() {
   const { user } = useAuth();
-  const [scores, setScores] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setProfile(null);
+      return;
+    }
+
+    const baseProfile = {
+      id: user.id,
+      username: user.username || "",
+      email: user.email || "",
+      score: Number.isFinite(user.score) ? user.score : 0,
+      games_played: Number.isFinite(user.games_played)
+        ? user.games_played
+        : 0,
+      friends: Array.isArray(user.friends) ? user.friends : [],
+    };
+
+    if (!baseProfile.username && baseProfile.email.includes("@")) {
+      baseProfile.username = baseProfile.email.split("@", 1)[0];
+    }
+
+    setProfile(baseProfile);
+
+    const needsFriends = !Array.isArray(user.friends);
+    const needsStats =
+      !Number.isFinite(user.score) ||
+      !Number.isFinite(user.games_played);
+
+    if (!needsFriends && !needsStats) {
+      return;
+    }
 
     setLoading(true);
-    setError(null);
+    setError("");
 
-    fetchLeaderboard()
-      .then((all) => {
-        const mine = (all || []).filter(
-          (s) => s.user_id === user.id || s.player === user.email
-        );
-        setScores(mine);
+    const requests = [];
+    if (needsFriends) {
+      requests.push(fetchFriends(user.id));
+    }
+    if (needsStats) {
+      requests.push(fetchFriendsLeaderboard(user.id));
+    }
+
+    Promise.all(requests)
+      .then((results) => {
+        let nextFriends = baseProfile.friends;
+        let nextScore = baseProfile.score;
+        let nextGamesPlayed = baseProfile.games_played;
+        let idx = 0;
+
+        if (needsFriends) {
+          nextFriends = Array.isArray(results[idx]) ? results[idx] : [];
+          idx += 1;
+        }
+
+        if (needsStats) {
+          const leaderboard = Array.isArray(results[idx]) ? results[idx] : [];
+          const mine = leaderboard.filter(
+            (entry) =>
+              entry.user_id === user.id ||
+              entry.player === (user.email || "")
+          );
+          nextGamesPlayed = mine.length;
+          nextScore = mine.reduce((sum, entry) => sum + (entry.score || 0), 0);
+        }
+
+        const mergedProfile = {
+          ...baseProfile,
+          friends: nextFriends,
+          score: nextScore,
+          games_played: nextGamesPlayed,
+        };
+
+        setProfile(mergedProfile);
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => {
+        setError(err.message || "Failed to load profile details");
+      })
       .finally(() => setLoading(false));
   }, [user]);
 
-  if (!user) {
+  if (!profile) {
     return (
       <main className="rules-page">
         <div className="rules-shell">
@@ -72,81 +113,59 @@ export default function Profile() {
     );
   }
 
-  const stats = computeStats(scores);
-
   return (
     <main className="rules-page">
-      <div className="rules-shell">
-        <header className="rules-header">
-          <p className="rules-eyebrow">Winpoint</p>
-          <h1 className="rules-title">Your Profile</h1>
-          <p className="rules-subtitle">{user.email}</p>
-        </header>
+      <div className="rules-shell profile-shell">
+        <section className="rules-section profile-card" aria-labelledby="profile-title">
+          <h1 id="profile-title" className="rules-title profile-title">Your Profile</h1>
 
-        {stats && (
-          <section className="rules-section" aria-labelledby="profile-stats">
-            <h2 id="profile-stats">Stats</h2>
-            <div className="profile-stats-grid">
-              <div className="profile-stat">
-                <span className="profile-stat-value">{stats.gamesPlayed}</span>
-                <span className="profile-stat-label">Games Played</span>
+          {loading && <p className="profile-status">Loading profile...</p>}
+          {error && <p className="profile-status profile-status-error">{error}</p>}
+
+          <section className="profile-section" aria-labelledby="profile-user-info">
+            <h2 id="profile-user-info">User Info</h2>
+            <div className="profile-info-grid">
+              <div className="profile-info-row">
+                <span className="profile-info-label">Username</span>
+                <span className="profile-info-value">{profile.username || "-"}</span>
               </div>
-              <div className="profile-stat">
-                <span className="profile-stat-value">{stats.totalScore}</span>
-                <span className="profile-stat-label">Total Score</span>
-              </div>
-              <div className="profile-stat">
-                <span className="profile-stat-value">{stats.bestScore}</span>
-                <span className="profile-stat-label">Best Score</span>
-              </div>
-              <div className="profile-stat">
-                <span className="profile-stat-value profile-stat-capitalize">
-                  {stats.favoriteType}
-                </span>
-                <span className="profile-stat-label">Favorite Mode</span>
+              <div className="profile-info-row">
+                <span className="profile-info-label">Email</span>
+                <span className="profile-info-value">{profile.email || "-"}</span>
               </div>
             </div>
           </section>
-        )}
 
-        <section className="rules-section" aria-labelledby="profile-scores">
-          <h2 id="profile-scores">Your Scores</h2>
-
-          {loading && <p className="profile-status">Loading scores…</p>}
-
-          {error && <p className="profile-status profile-status-error">{error}</p>}
-
-          {!loading && !error && scores.length === 0 && (
-            <div className="profile-empty-scores">
-              <p>No games played yet.</p>
-              <Link to="/play" className="rules-btn rules-btn-primary">
-                Play Now
-              </Link>
+          <section className="profile-section" aria-labelledby="profile-stats">
+            <h2 id="profile-stats">Stats</h2>
+            <div className="profile-stats-grid">
+              <div className="profile-stat">
+                <span className="profile-stat-value">{profile.score || 0}</span>
+                <span className="profile-stat-label">Score</span>
+              </div>
+              <div className="profile-stat">
+                <span className="profile-stat-value">{profile.games_played || 0}</span>
+                <span className="profile-stat-label">Games Played</span>
+              </div>
             </div>
-          )}
+          </section>
 
-          {!loading && !error && scores.length > 0 && (
-            <div className="rules-table-wrap">
-              <table className="rules-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Game Type</th>
-                    <th scope="col">Score</th>
-                    <th scope="col">Guesses Used</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {scores.map((entry, i) => (
-                    <tr key={entry.id ?? i}>
-                      <td className="profile-game-type">{entry.entity_type}</td>
-                      <td>{entry.score}</td>
-                      <td>{entry.guesses_used}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <section className="profile-section" aria-labelledby="profile-friends">
+            <h2 id="profile-friends">Friends</h2>
+            {Array.isArray(profile.friends) && profile.friends.length > 0 ? (
+              <ul className="profile-friends-list">
+                {profile.friends.map((friend, idx) => {
+                  const friendName =
+                    typeof friend === "string"
+                      ? friend
+                      : friend.email || friend.id || `Friend ${idx + 1}`;
+                  return <li key={friend.id || friend.email || idx}>{friendName}</li>;
+                })}
+              </ul>
+            ) : (
+              <p className="profile-empty-friends">No friends added yet.</p>
+            )}
+          </section>
         </section>
       </div>
     </main>
