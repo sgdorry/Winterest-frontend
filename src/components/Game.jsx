@@ -25,7 +25,7 @@ export default function Game({ entityType, targetEntity, allEntities = [], onRes
   )
     && allEntities.length > 0;
   const sortedNames = useDropdown
-    ? [...allEntities].map((e) => e.name).sort()
+    ? [...new Set(allEntities.map((e) => e.name))].sort()
     : [];
 
   useEffect(() => {
