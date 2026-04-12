@@ -56,7 +56,7 @@
 
 .profile-stats-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 
@@ -149,6 +149,39 @@
 
 .profile-empty-scores p {
   margin: 0 0 16px;
+}
+
+.profile-empty-scores .rules-actions {
+  justify-content: center;
+}
+
+.profile-scores-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.profile-scores-table th,
+.profile-scores-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(196, 185, 154, 0.3);
+}
+
+.profile-scores-table th {
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8a7b64;
+}
+
+.profile-scores-table td {
+  color: #2c2416;
+}
+
+.profile-scores-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 @media (max-width: 700px) {
