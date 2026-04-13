@@ -24,6 +24,30 @@ export async function fetchLeaderboardFilters() {
   return Array.isArray(data.filters) ? data.filters : [];
 }
 
+export async function fetchAggregatedLeaderboard() {
+  const res = await fetch(`${API_BASE}/scores/aggregated`);
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Leaderboard could not be loaded. [${res.status}] ${text}`);
+  }
+
+  const data = await res.json();
+  return data.scores;
+}
+
+export async function fetchAggregatedFriendsLeaderboard(userId) {
+  const res = await fetch(`${API_BASE}/scores/friends/aggregated?user_id=${encodeURIComponent(userId)}`);
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Leaderboard could not be loaded. [${res.status}] ${text}`);
+  }
+
+  const data = await res.json();
+  return data.scores;
+}
+
 export async function submitScore({ entityType, score, guessesUsed, userId, selectedValues = [] }) {
   const body = {
     entity_type: entityType,

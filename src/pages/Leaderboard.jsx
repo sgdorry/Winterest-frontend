@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { fetchLeaderboard, fetchLeaderboardFilters } from "../api/scores";
-import { fetchFriendsLeaderboard, addFriend, removeFriend, fetchFriends } from "../api/friends";
+import { fetchAggregatedLeaderboard, fetchAggregatedFriendsLeaderboard, fetchLeaderboardFilters } from "../api/scores";
+import { addFriend, removeFriend, fetchFriends } from "../api/friends";
 import { useAuth } from "../context/AuthContext";
 import "./Rules.css";
 import "./Leaderboard.css";
@@ -26,8 +26,8 @@ export default function Leaderboard() {
 
     const promise =
       selectedFilter === "friends" && user
-        ? fetchFriendsLeaderboard(user.id)
-        : fetchLeaderboard();
+        ? fetchAggregatedFriendsLeaderboard(user.id)
+        : fetchAggregatedLeaderboard();
 
     promise
       .then((data) => setScores(Array.isArray(data) ? data : []))
@@ -87,7 +87,7 @@ export default function Leaderboard() {
       await removeFriend(user.id, friendId);
       const updated = await fetchFriends(user.id);
       setFriends(updated);
-      setModalMsg({ type: "success", text: "Friend removed" });
+      setModalMsg({ type: "success", text: "Unfollowed" });
       if (filter === "friends") loadScores("friends");
     } catch (err) {
       setModalMsg({ type: "error", text: err.message });
@@ -135,7 +135,7 @@ export default function Leaderboard() {
               className="rules-btn rules-btn-primary"
               onClick={openModal}
             >
-              Add Friend
+              Friends
             </button>
           </div>
         )}
@@ -154,7 +154,7 @@ export default function Leaderboard() {
           {!loading && !error && scores.length === 0 && (
             <p className="leaderboard-loading">
               {filter === "friends"
-                ? "No friend scores yet. Add friends and play some games!"
+                ? "No scores from people you follow yet. Follow users and play some games!"
                 : "No scores yet. Play a game to get on the board!"}
             </p>
           )}
@@ -168,19 +168,17 @@ export default function Leaderboard() {
                     <th scope="col">Player</th>
                     <th scope="col">Score</th>
                     <th scope="col">Guesses Used</th>
-                    <th scope="col">Game Type</th>
+                    <th scope="col">Games Played</th>
                   </tr>
                 </thead>
                 <tbody>
                   {scores.map((entry, i) => (
-                    <tr key={entry.id ?? i}>
+                    <tr key={entry.user_id ?? i}>
                       <td className="leaderboard-rank">{i + 1}</td>
-                      <td>{entry.player ?? entry.username ?? "Anonymous"}</td>
+                      <td>{entry.username ?? "Unknown"}</td>
                       <td>{entry.score}</td>
                       <td>{entry.guesses_used}</td>
-                      <td className="leaderboard-game-type">
-                        {entry.entity_type}
-                      </td>
+                      <td>{entry.games_played}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -193,13 +191,13 @@ export default function Leaderboard() {
       {showModal && (
         <div className="leaderboard-modal-overlay" onClick={() => setShowModal(false)}>
           <div className="leaderboard-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Manage Friends</h3>
+            <h3>Manage Following</h3>
 
             <div className="leaderboard-modal-add">
               <input
                 className="leaderboard-modal-input"
                 type="email"
-                placeholder="Enter friend's email"
+                placeholder="Enter user's email"
                 value={friendEmail}
                 onChange={(e) => setFriendEmail(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleAddFriend()}
@@ -221,7 +219,7 @@ export default function Leaderboard() {
 
             {friends.length > 0 && (
               <div className="leaderboard-friends-list">
-                <h4>Your Friends</h4>
+                <h4>People You Follow</h4>
                 {friends.map((f) => (
                   <div key={f.id} className="leaderboard-friend-item">
                     <span>{f.email}</span>
@@ -230,7 +228,7 @@ export default function Leaderboard() {
                       onClick={() => handleRemoveFriend(f.id)}
                       disabled={modalLoading}
                     >
-                      Remove
+                      Unfollow
                     </button>
                   </div>
                 ))}
