@@ -17,8 +17,8 @@ async function postJson(path, body, errorMsg) {
   return data;
 }
 
-export async function signup(email, password) {
-  return postJson("/signup", { email, password }, "Signup failed");
+export async function signup(email, username, password) {
+  return postJson("/signup", { email, username, password }, "Signup failed");
 }
 
 export async function login(email, password) {
