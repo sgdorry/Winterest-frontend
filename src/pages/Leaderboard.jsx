@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { fetchAggregatedLeaderboard, fetchAggregatedFriendsLeaderboard, fetchLeaderboardFilters } from "../api/scores";
+import { /* fetchAggregatedLeaderboard, */ fetchAggregatedFriendsLeaderboard /* , fetchLeaderboardFilters */ } from "../api/scores";
 import { addFriend, removeFriend, fetchFriends } from "../api/friends";
 import { useAuth } from "../context/AuthContext";
 import "./Rules.css";
@@ -10,8 +10,8 @@ export default function Leaderboard() {
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState("all");
-  const [filterOptions, setFilterOptions] = useState([]);
+  // const [filter, setFilter] = useState("all");
+  // const [filterOptions, setFilterOptions] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [friendEmail, setFriendEmail] = useState("");
   const [friends, setFriends] = useState([]);
@@ -20,35 +20,42 @@ export default function Leaderboard() {
 
   const { user } = useAuth();
 
-  const loadScores = useCallback((selectedFilter) => {
+  const loadScores = useCallback(() => {
+    if (!user) return;
     setLoading(true);
     setError(null);
 
-    const promise =
-      selectedFilter === "friends" && user
-        ? fetchAggregatedFriendsLeaderboard(user.id)
-        : fetchAggregatedLeaderboard();
-
-    promise
+    fetchAggregatedFriendsLeaderboard(user.id)
       .then((data) => setScores(Array.isArray(data) ? data : []))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+
+    // Global leaderboard (commented out):
+    // const promise =
+    //   selectedFilter === "friends" && user
+    //     ? fetchAggregatedFriendsLeaderboard(user.id)
+    //     : fetchAggregatedLeaderboard();
+    // promise
+    //   .then((data) => setScores(Array.isArray(data) ? data : []))
+    //   .catch((err) => setError(err.message))
+    //   .finally(() => setLoading(false));
   }, [user]);
 
   useEffect(() => {
-    loadScores(filter);
-  }, [filter, loadScores]);
+    loadScores();
+  }, [loadScores]);
 
-  useEffect(() => {
-    if (!user) return;
-    fetchLeaderboardFilters()
-      .then((options) => setFilterOptions(options))
-      .catch(() => setFilterOptions([]));
-  }, [user]);
+  // Global leaderboard filters (commented out):
+  // useEffect(() => {
+  //   if (!user) return;
+  //   fetchLeaderboardFilters()
+  //     .then((options) => setFilterOptions(options))
+  //     .catch(() => setFilterOptions([]));
+  // }, [user]);
 
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-  };
+  // const handleFilterChange = (e) => {
+  //   setFilter(e.target.value);
+  // };
 
   const openModal = () => {
     setShowModal(true);
@@ -71,7 +78,7 @@ export default function Leaderboard() {
       setFriendEmail("");
       const updated = await fetchFriends(user.id);
       setFriends(updated);
-      if (filter === "friends") loadScores("friends");
+      loadScores();
     } catch (err) {
       setModalMsg({ type: "error", text: err.message });
     } finally {
@@ -88,7 +95,7 @@ export default function Leaderboard() {
       const updated = await fetchFriends(user.id);
       setFriends(updated);
       setModalMsg({ type: "success", text: "Unfollowed" });
-      if (filter === "friends") loadScores("friends");
+      loadScores();
     } catch (err) {
       setModalMsg({ type: "error", text: err.message });
     } finally {
@@ -117,6 +124,7 @@ export default function Leaderboard() {
 
         {user && (
           <div className="leaderboard-controls">
+            {/* Global leaderboard filter (commented out):
             <select
               className="leaderboard-filter"
               value={filter}
@@ -131,6 +139,7 @@ export default function Leaderboard() {
                 </option>
               ))}
             </select>
+            */}
             <button
               className="rules-btn rules-btn-primary"
               onClick={openModal}
@@ -153,9 +162,7 @@ export default function Leaderboard() {
 
           {!loading && !error && scores.length === 0 && (
             <p className="leaderboard-loading">
-              {filter === "friends"
-                ? "No scores from people you follow yet. Follow users and play some games!"
-                : "No scores yet. Play a game to get on the board!"}
+              No scores yet. Add friends and play some games!
             </p>
           )}
 
