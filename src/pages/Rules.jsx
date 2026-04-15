@@ -27,7 +27,7 @@ export default function Rules() {
           <h2 id="rules-flow">Quick Start</h2>
           <ol className="rules-list rules-list-numbered">
             <li>
-              Choose a game version: Countries, States, Cities, or Counties.
+              Choose a game version: Countries, States, Cities.
             </li>
             <li>Start a new game and read the first hint.</li>
             <li>Make your guess for the location.</li>
