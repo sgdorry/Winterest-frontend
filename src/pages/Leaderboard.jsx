@@ -110,7 +110,7 @@ export default function Leaderboard() {
           <p className="rules-eyebrow">Winpoint</p>
           <h1 className="rules-title">Leaderboard</h1>
           <p className="rules-subtitle">
-            Top scores from all players across every game mode.
+            Top scores from you and your friends
           </p>
           <div className="rules-actions">
             <Link to="/play" className="rules-btn rules-btn-primary">
