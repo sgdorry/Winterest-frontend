@@ -20,14 +20,45 @@
   text-transform: capitalize;
 }
 
-/* Controls row: filter dropdown + add friend button */
 .leaderboard-controls {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   margin: 0 auto 24px;
   max-width: 720px;
   padding: 0 24px;
+}
+
+.leaderboard-period-filters {
+  display: flex;
+  gap: 6px;
+  background: #f0ebe0;
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.leaderboard-period-btn {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #6b5d4a;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.leaderboard-period-btn:hover {
+  background: #e4ddd0;
+  color: #2c2416;
+}
+
+.leaderboard-period-btn--active {
+  background: #fff;
+  color: #2c2416;
+  box-shadow: 0 1px 4px rgba(44, 36, 22, 0.12);
 }
 
 .leaderboard-filter {
@@ -152,8 +183,9 @@
     padding: 0 16px;
   }
 
-  .leaderboard-filter {
-    width: 100%;
+  .leaderboard-period-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
   }
 
   .leaderboard-modal {

@@ -36,8 +36,9 @@ export async function fetchAggregatedLeaderboard() {
   return data.scores;
 }
 
-export async function fetchAggregatedFriendsLeaderboard(userId) {
-  const res = await fetch(`${API_BASE}/scores/friends/aggregated?user_id=${encodeURIComponent(userId)}`);
+export async function fetchAggregatedFriendsLeaderboard(userId, period = "all") {
+  const params = new URLSearchParams({ user_id: userId, period });
+  const res = await fetch(`${API_BASE}/scores/friends/aggregated?${params}`);
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");

@@ -1,17 +1,22 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { /* fetchAggregatedLeaderboard, */ fetchAggregatedFriendsLeaderboard /* , fetchLeaderboardFilters */ } from "../api/scores";
+import { fetchAggregatedFriendsLeaderboard } from "../api/scores";
 import { addFriend, removeFriend, fetchFriends } from "../api/friends";
 import { useAuth } from "../context/AuthContext";
 import "./Rules.css";
 import "./Leaderboard.css";
 
+const PERIOD_OPTIONS = [
+  { value: "all", label: "All Time" },
+  { value: "month", label: "This Month" },
+  { value: "week", label: "This Week" },
+];
+
 export default function Leaderboard() {
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // const [filter, setFilter] = useState("all");
-  // const [filterOptions, setFilterOptions] = useState([]);
+  const [period, setPeriod] = useState("all");
   const [showModal, setShowModal] = useState(false);
   const [friendEmail, setFriendEmail] = useState("");
   const [friends, setFriends] = useState([]);
@@ -25,37 +30,15 @@ export default function Leaderboard() {
     setLoading(true);
     setError(null);
 
-    fetchAggregatedFriendsLeaderboard(user.id)
+    fetchAggregatedFriendsLeaderboard(user.id, period)
       .then((data) => setScores(Array.isArray(data) ? data : []))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-
-    // Global leaderboard (commented out):
-    // const promise =
-    //   selectedFilter === "friends" && user
-    //     ? fetchAggregatedFriendsLeaderboard(user.id)
-    //     : fetchAggregatedLeaderboard();
-    // promise
-    //   .then((data) => setScores(Array.isArray(data) ? data : []))
-    //   .catch((err) => setError(err.message))
-    //   .finally(() => setLoading(false));
-  }, [user]);
+  }, [user, period]);
 
   useEffect(() => {
     loadScores();
   }, [loadScores]);
-
-  // Global leaderboard filters (commented out):
-  // useEffect(() => {
-  //   if (!user) return;
-  //   fetchLeaderboardFilters()
-  //     .then((options) => setFilterOptions(options))
-  //     .catch(() => setFilterOptions([]));
-  // }, [user]);
-
-  // const handleFilterChange = (e) => {
-  //   setFilter(e.target.value);
-  // };
 
   const openModal = () => {
     setShowModal(true);
@@ -124,22 +107,17 @@ export default function Leaderboard() {
 
         {user && (
           <div className="leaderboard-controls">
-            {/* Global leaderboard filter (commented out):
-            <select
-              className="leaderboard-filter"
-              value={filter}
-              onChange={handleFilterChange}
-            >
-              {filterOptions.length === 0 && (
-                <option value="all">Loading filters...</option>
-              )}
-              {filterOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
+            <div className="leaderboard-period-filters">
+              {PERIOD_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  className={`leaderboard-period-btn${period === opt.value ? " leaderboard-period-btn--active" : ""}`}
+                  onClick={() => setPeriod(opt.value)}
+                >
+                  {opt.label}
+                </button>
               ))}
-            </select>
-            */}
+            </div>
             <button
               className="rules-btn rules-btn-primary"
               onClick={openModal}
