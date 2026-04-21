@@ -24,6 +24,39 @@
   font-weight: 700;
 }
 
+.profile-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.profile-section-header h2 {
+  margin: 0;
+}
+
+.profile-section-hint {
+  margin: 0;
+  color: #6b5d4a;
+  font-size: 0.88rem;
+}
+
+.profile-friends-btn {
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .profile-section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .profile-friends-btn {
+    width: 100%;
+  }
+}
+
 .profile-info-grid {
   display: grid;
   gap: 10px;

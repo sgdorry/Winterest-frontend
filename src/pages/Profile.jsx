@@ -2,13 +2,20 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { fetchLeaderboard } from "../api/scores";
+import { addFriend, removeFriend, fetchFriends } from "../api/friends";
 import "./Rules.css";
+import "./Leaderboard.css";
 import "./Profile.css";
 
 export default function Profile() {
   const { user } = useAuth();
   const [scores, setScores] = useState(null);
   const [error, setError] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [friendEmail, setFriendEmail] = useState("");
+  const [friends, setFriends] = useState([]);
+  const [modalMsg, setModalMsg] = useState(null);
+  const [modalLoading, setModalLoading] = useState(false);
 
   const loading = !!user && scores === null && !error;
 
@@ -32,6 +39,50 @@ export default function Profile() {
 
     return () => { cancelled = true; };
   }, [user]);
+
+  const openModal = () => {
+    setShowModal(true);
+    setFriendEmail("");
+    setModalMsg(null);
+    if (user) {
+      fetchFriends(user.id)
+        .then(setFriends)
+        .catch(() => setFriends([]));
+    }
+  };
+
+  const handleAddFriend = async () => {
+    if (!friendEmail.trim() || !user) return;
+    setModalLoading(true);
+    setModalMsg(null);
+    try {
+      const data = await addFriend(user.id, friendEmail.trim());
+      setModalMsg({ type: "success", text: `Added ${data.friend.email}` });
+      setFriendEmail("");
+      const updated = await fetchFriends(user.id);
+      setFriends(updated);
+    } catch (err) {
+      setModalMsg({ type: "error", text: err.message });
+    } finally {
+      setModalLoading(false);
+    }
+  };
+
+  const handleRemoveFriend = async (friendId) => {
+    if (!user) return;
+    setModalLoading(true);
+    setModalMsg(null);
+    try {
+      await removeFriend(user.id, friendId);
+      const updated = await fetchFriends(user.id);
+      setFriends(updated);
+      setModalMsg({ type: "success", text: "Unfollowed" });
+    } catch (err) {
+      setModalMsg({ type: "error", text: err.message });
+    } finally {
+      setModalLoading(false);
+    }
+  };
 
   if (!user) {
     return (
@@ -78,13 +129,6 @@ export default function Profile() {
             Your Profile
           </h1>
 
-          {loading && (
-            <p className="profile-status">Loading scores…</p>
-          )}
-          {error && (
-            <p className="profile-status profile-status-error">{error}</p>
-          )}
-
           <section
             className="profile-section"
             aria-labelledby="profile-user-info"
@@ -105,6 +149,31 @@ export default function Profile() {
               </div>
             </div>
           </section>
+
+          <section
+            className="profile-section profile-friends-section"
+            aria-labelledby="profile-friends"
+          >
+            <div className="profile-section-header">
+              <h2 id="profile-friends">Friends</h2>
+              <button
+                className="rules-btn rules-btn-primary profile-friends-btn"
+                onClick={openModal}
+              >
+                Manage Friends
+              </button>
+            </div>
+            <p className="profile-section-hint">
+              Follow other players to see them on your leaderboard.
+            </p>
+          </section>
+
+          {loading && (
+            <p className="profile-status">Loading scores…</p>
+          )}
+          {error && (
+            <p className="profile-status profile-status-error">{error}</p>
+          )}
 
           {!loading && !error && scores && scores.length === 0 && (
             <div className="profile-empty-scores">
@@ -170,6 +239,63 @@ export default function Profile() {
           )}
         </section>
       </div>
+
+      {showModal && (
+        <div className="leaderboard-modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="leaderboard-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Manage Following</h3>
+
+            <div className="leaderboard-modal-add">
+              <input
+                className="leaderboard-modal-input"
+                type="email"
+                placeholder="Enter user's email"
+                value={friendEmail}
+                onChange={(e) => setFriendEmail(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleAddFriend()}
+              />
+              <button
+                className="rules-btn rules-btn-primary"
+                onClick={handleAddFriend}
+                disabled={modalLoading}
+              >
+                Add
+              </button>
+            </div>
+
+            {modalMsg && (
+              <p className={`leaderboard-modal-msg leaderboard-modal-msg--${modalMsg.type}`}>
+                {modalMsg.text}
+              </p>
+            )}
+
+            {friends.length > 0 && (
+              <div className="leaderboard-friends-list">
+                <h4>People You Follow</h4>
+                {friends.map((f) => (
+                  <div key={f.id} className="leaderboard-friend-item">
+                    <span>{f.email}</span>
+                    <button
+                      className="rules-btn rules-btn-secondary leaderboard-remove-btn"
+                      onClick={() => handleRemoveFriend(f.id)}
+                      disabled={modalLoading}
+                    >
+                      Unfollow
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <button
+              className="rules-btn rules-btn-secondary leaderboard-modal-close"
+              onClick={() => setShowModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
