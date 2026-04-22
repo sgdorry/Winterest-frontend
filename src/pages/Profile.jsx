@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { fetchLeaderboard } from "../api/scores";
 import { addFriend, removeFriend, fetchFriends } from "../api/friends";
+import { updateUsername } from "../api/users";
 import "./Rules.css";
 import "./Leaderboard.css";
 import "./Profile.css";
 
+const USERNAME_REGEX = /^[A-Za-z0-9_]+$/;
+
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [scores, setScores] = useState(null);
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -16,6 +19,10 @@ export default function Profile() {
   const [friends, setFriends] = useState([]);
   const [modalMsg, setModalMsg] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
+  const [usernameDraft, setUsernameDraft] = useState("");
+  const [usernameSaving, setUsernameSaving] = useState(false);
+  const [usernameStatus, setUsernameStatus] = useState(null);
+  const [usernameEditing, setUsernameEditing] = useState(false);
 
   const loading = !!user && scores === null && !error;
 
@@ -38,6 +45,17 @@ export default function Profile() {
       });
 
     return () => { cancelled = true; };
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) {
+      setUsernameDraft("");
+      return;
+    }
+    const currentUsername =
+      user.username ||
+      (user.email && user.email.includes("@") ? user.email.split("@")[0] : "");
+    setUsernameDraft(currentUsername);
   }, [user]);
 
   const openModal = () => {
@@ -82,6 +100,58 @@ export default function Profile() {
     } finally {
       setModalLoading(false);
     }
+  };
+
+  const handleUsernameSubmit = async (e) => {
+    e.preventDefault();
+    if (!user || !user.id) return;
+
+    const nextUsername = usernameDraft.trim();
+    if (!nextUsername) {
+      setUsernameStatus({ type: "error", text: "Username is required." });
+      return;
+    }
+    if (!USERNAME_REGEX.test(nextUsername)) {
+      setUsernameStatus({
+        type: "error",
+        text: "Username can only include letters, numbers, and underscores.",
+      });
+      return;
+    }
+    if (nextUsername.toLowerCase() === (user.username || "").toLowerCase()) {
+      setUsernameStatus({ type: "success", text: "Username is unchanged." });
+      setUsernameEditing(false);
+      return;
+    }
+
+    setUsernameSaving(true);
+    setUsernameStatus(null);
+    try {
+      const data = await updateUsername(user.id, nextUsername);
+      if (data?.user) {
+        updateUser(data.user);
+      }
+      setUsernameStatus({ type: "success", text: "Username updated." });
+      setUsernameEditing(false);
+    } catch (err) {
+      setUsernameStatus({
+        type: "error",
+        text: err.message || "Failed to update username.",
+      });
+    } finally {
+      setUsernameSaving(false);
+    }
+  };
+
+  const startEditingUsername = () => {
+    setUsernameDraft(username || "");
+    setUsernameStatus(null);
+    setUsernameEditing(true);
+  };
+
+  const cancelEditingUsername = () => {
+    setUsernameDraft(username || "");
+    setUsernameEditing(false);
   };
 
   if (!user) {
@@ -137,10 +207,61 @@ export default function Profile() {
             <div className="profile-info-grid">
               <div className="profile-info-row">
                 <span className="profile-info-label">Username</span>
-                <span className="profile-info-value">
-                  {username || "-"}
+                <span className="profile-info-value profile-info-value-with-action">
+                  <span>{username || "-"}</span>
+                  <button
+                    type="button"
+                    className="profile-username-edit-btn"
+                    onClick={startEditingUsername}
+                    disabled={usernameSaving || usernameEditing}
+                  >
+                    Edit
+                  </button>
                 </span>
               </div>
+              {usernameEditing && (
+                <form className="profile-username-form" onSubmit={handleUsernameSubmit}>
+                  <label className="profile-info-label" htmlFor="profile-username-input">
+                    New Username
+                  </label>
+                  <div className="profile-username-controls">
+                    <input
+                      id="profile-username-input"
+                      className="profile-username-input"
+                      type="text"
+                      value={usernameDraft}
+                      onChange={(e) => setUsernameDraft(e.target.value)}
+                      pattern="[A-Za-z0-9_]+"
+                      title="Use letters, numbers, and underscores only"
+                      placeholder="new_username"
+                      disabled={usernameSaving}
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="rules-btn rules-btn-primary profile-username-btn"
+                      disabled={usernameSaving}
+                    >
+                      {usernameSaving ? "Saving..." : "Save"}
+                    </button>
+                    <button
+                      type="button"
+                      className="rules-btn rules-btn-secondary profile-username-btn"
+                      onClick={cancelEditingUsername}
+                      disabled={usernameSaving}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
+              {usernameStatus && (
+                <p
+                  className={`profile-username-status profile-username-status--${usernameStatus.type}`}
+                >
+                  {usernameStatus.text}
+                </p>
+              )}
               <div className="profile-info-row">
                 <span className="profile-info-label">Email</span>
                 <span className="profile-info-value">

@@ -4,9 +4,12 @@ import { signup } from "../api/users";
 import "./Title.css";
 import "./Auth.css";
 
+const USERNAME_REGEX = /^[A-Za-z0-9_]+$/;
+
 export default function Signup() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
@@ -21,9 +24,13 @@ export default function Signup() {
         setError("Passwords do not match");
         return;
       }
+      if (!USERNAME_REGEX.test(username)) {
+        setError("Username can only include letters, numbers, and underscores");
+        return;
+      }
       setLoading(true);
       try {
-        const data = await signup(email, password);
+        const data = await signup(email, username, password);
         setMessage(data.message || "Account created successfully");
 
         setTimeout(() => {
@@ -56,6 +63,19 @@ export default function Signup() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="auth-field">
+            <label className="auth-label">Username</label>
+            <input
+              className="auth-input"
+              type="text"
+              placeholder="your_username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              pattern="[A-Za-z0-9_]+"
+              title="Use letters, numbers, and underscores only"
               required
             />
           </div>

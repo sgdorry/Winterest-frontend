@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { AuthProvider } from "../context/AuthContext";
@@ -8,7 +8,12 @@ vi.mock("../api/scores", () => ({
   fetchLeaderboard: vi.fn(),
 }));
 
+vi.mock("../api/users", () => ({
+  updateUsername: vi.fn(),
+}));
+
 import { fetchLeaderboard } from "../api/scores";
+import { updateUsername } from "../api/users";
 
 function renderProfile() {
   return render(
@@ -129,6 +134,51 @@ describe("Profile", () => {
       fetchLeaderboard.mockReturnValue(new Promise(() => {}));
       renderProfile();
       expect(screen.getByText("Loading scores…")).toBeInTheDocument();
+    });
+
+    it("keeps username input hidden until Edit is clicked", async () => {
+      fetchLeaderboard.mockResolvedValue([]);
+      renderProfile();
+
+      await waitFor(() => {
+        expect(fetchLeaderboard).toHaveBeenCalled();
+      });
+
+      expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
+      expect(screen.queryByLabelText("New Username")).not.toBeInTheDocument();
+    });
+
+    it("updates username from profile form", async () => {
+      fetchLeaderboard.mockResolvedValue([]);
+      updateUsername.mockResolvedValue({
+        user: { id: 7, email: "player@winpoint.com", username: "new_name" },
+      });
+      renderProfile();
+
+      fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+      const input = screen.getByLabelText("New Username");
+      fireEvent.change(input, { target: { value: "new_name" } });
+      fireEvent.click(screen.getByRole("button", { name: "Save" }));
+
+      await waitFor(() => {
+        expect(updateUsername).toHaveBeenCalledWith(7, "new_name");
+      });
+      expect(screen.getByText("Username updated.")).toBeInTheDocument();
+    });
+
+    it("blocks invalid username and does not call api", async () => {
+      fetchLeaderboard.mockResolvedValue([]);
+      renderProfile();
+
+      fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+      const input = screen.getByLabelText("New Username");
+      fireEvent.change(input, { target: { value: "bad name" } });
+      fireEvent.click(screen.getByRole("button", { name: "Save" }));
+
+      expect(
+        screen.getByText("Username can only include letters, numbers, and underscores.")
+      ).toBeInTheDocument();
+      expect(updateUsername).not.toHaveBeenCalled();
     });
   });
 });
