@@ -155,10 +155,12 @@ describe("Profile", () => {
       });
       renderProfile();
 
+      await waitFor(() => expect(fetchLeaderboard).toHaveBeenCalled());
+
       fireEvent.click(screen.getByRole("button", { name: "Edit" }));
       const input = screen.getByLabelText("New Username");
       fireEvent.change(input, { target: { value: "new_name" } });
-      fireEvent.click(screen.getByRole("button", { name: "Save" }));
+      fireEvent.submit(input.closest("form"));
 
       await waitFor(() => {
         expect(updateUsername).toHaveBeenCalledWith(7, "new_name");
@@ -170,10 +172,12 @@ describe("Profile", () => {
       fetchLeaderboard.mockResolvedValue([]);
       renderProfile();
 
+      await waitFor(() => expect(fetchLeaderboard).toHaveBeenCalled());
+
       fireEvent.click(screen.getByRole("button", { name: "Edit" }));
       const input = screen.getByLabelText("New Username");
       fireEvent.change(input, { target: { value: "bad name" } });
-      fireEvent.click(screen.getByRole("button", { name: "Save" }));
+      fireEvent.submit(input.closest("form"));
 
       expect(
         screen.getByText("Username can only include letters, numbers, and underscores.")
