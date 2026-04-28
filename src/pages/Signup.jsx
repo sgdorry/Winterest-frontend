@@ -9,7 +9,7 @@ const USERNAME_REGEX = /^[A-Za-z0-9_]+$/;
 export default function Signup() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
