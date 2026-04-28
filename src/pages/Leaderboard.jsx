@@ -13,8 +13,9 @@ const PERIOD_OPTIONS = [
 ];
 
 export default function Leaderboard() {
+  const { user } = useAuth();
   const [scores, setScores] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !!user);
   const [error, setError] = useState(null);
   const [period, setPeriod] = useState("all");
   const [showModal, setShowModal] = useState(false);
@@ -23,10 +24,13 @@ export default function Leaderboard() {
   const [modalMsg, setModalMsg] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
 
-  const { user } = useAuth();
-
   const loadScores = useCallback(() => {
-    if (!user) return;
+    if (!user) {
+      setScores([]);
+      setError(null);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
 
@@ -138,7 +142,13 @@ export default function Leaderboard() {
             <p className="leaderboard-error">{error}</p>
           )}
 
-          {!loading && !error && scores.length === 0 && (
+          {!user && !loading && !error && (
+            <p className="leaderboard-loading">
+              Log in to see scores from you and your friends.
+            </p>
+          )}
+
+          {user && !loading && !error && scores.length === 0 && (
             <p className="leaderboard-loading">
               No scores yet. Add friends and play some games!
             </p>

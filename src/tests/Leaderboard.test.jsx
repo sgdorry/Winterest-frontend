@@ -1,7 +1,7 @@
 import React from 'react'
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { AuthProvider } from "../context/AuthContext";
 import Leaderboard from "../pages/Leaderboard";
 
@@ -15,6 +15,8 @@ vi.mock("../api/friends", () => ({
   fetchFriends: vi.fn(() => Promise.resolve([])),
 }));
 
+import { fetchAggregatedFriendsLeaderboard } from "../api/scores";
+
 function renderLeaderboard() {
   return render(
     <MemoryRouter>
@@ -26,6 +28,11 @@ function renderLeaderboard() {
 }
 
 describe("Leaderboard", () => {
+  beforeEach(() => {
+    localStorage.removeItem("user");
+    vi.clearAllMocks();
+  });
+
   it("renders the Leaderboard heading", () => {
     renderLeaderboard();
     expect(screen.getByText("Leaderboard")).toBeInTheDocument();
@@ -40,5 +47,30 @@ describe("Leaderboard", () => {
   it("renders the Rankings section", () => {
     renderLeaderboard();
     expect(screen.getByText("Rankings")).toBeInTheDocument();
+  });
+
+  it("shows a logged-out message and does not fetch scores without a user", async () => {
+    renderLeaderboard();
+
+    expect(
+      await screen.findByText("Log in to see scores from you and your friends.")
+    ).toBeInTheDocument();
+    expect(fetchAggregatedFriendsLeaderboard).not.toHaveBeenCalled();
+  });
+
+  it("fetches scores for the logged-in user", async () => {
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ id: 7, email: "player@example.com" })
+    );
+
+    renderLeaderboard();
+
+    await waitFor(() => {
+      expect(fetchAggregatedFriendsLeaderboard).toHaveBeenCalledWith(7, "all");
+    });
+    expect(
+      await screen.findByText("No scores yet. Add friends and play some games!")
+    ).toBeInTheDocument();
   });
 });
