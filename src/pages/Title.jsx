@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./Title.css";
 
 export default function Title() {
+  const { user } = useAuth();
   const images = {
     logo: "/landing/winpoint-logo.png",
     leaderboard: "/landing/leaderboard-button.png",
@@ -13,14 +14,6 @@ export default function Title() {
     plane: "/landing/plane.png",
     profilePic: "/landing/profile-pic.png",
   };
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
 
   return (
     <div className="landing">
@@ -43,14 +36,16 @@ export default function Title() {
           </Link>
         </div>
 
-        <div className="landing-auth-links">
-          <Link to="/login" className="img-link img-link-auth" aria-label="Sign in">
-            <img src={images.signIn} alt="Sign in" />
-          </Link>
-          <Link to="/signup" className="img-link img-link-auth" aria-label="Create account">
-            <img src={images.createAccount} alt="Create account" />
-          </Link>
-        </div>
+        {!user && (
+          <div className="landing-auth-links">
+            <Link to="/login" className="img-link img-link-auth" aria-label="Sign in">
+              <img src={images.signIn} alt="Sign in" />
+            </Link>
+            <Link to="/signup" className="img-link img-link-auth" aria-label="Create account">
+              <img src={images.createAccount} alt="Create account" />
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
