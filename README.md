@@ -199,5 +199,5 @@ Both repos use **GitHub Actions** triggered on push/PR to `master`:
 
 ## Deployment
 
-- **Backend**: Hosted on PythonAnywhere (`Fall2023.pythonanywhere.com`). Deploy via `make prod` or `./deploy.sh`.
+- **Backend**: Hosted on PythonAnywhere (`winterestjesma.pythonanywhere.com`). Deploy via `make prod` or `./deploy.sh`.
 - **Frontend**: Build with `npm run build`, deploy the `dist/` folder to any static host. Set `VITE_API_BASE_URL` to the production backend URL.
